@@ -19,5 +19,7 @@ setup(
         "jieba",
         "unstructured",
         "markdown",
+        "langchain_huggingface"
+        "python-multipart"
     ],
 )
