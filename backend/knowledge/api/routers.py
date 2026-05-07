@@ -1,6 +1,11 @@
 import os.path
 import logging
+import shutil
+
 import aiofiles
+
+from config.settings import settings
+
 logging.basicConfig(level=logging.DEBUG)
 logger=logging.getLogger(__name__)
 from fastapi import APIRouter,UploadFile,File,HTTPException
@@ -19,7 +24,13 @@ async def  upload_file(file: UploadFile=File(...)):
     # "0430-联想手机K900常见问题汇总.md"
 
     try:
-        file_suffix=os.path.splitext( file.filename)[1]
+        # 0.临时目录
+        temp_md_dir =settings.TMP_MD_FOLDER_PATH
+        file_suffix=os.path.splitext(file.filename)[1]
+        tmp_md_path=os.path.join(temp_md_dir,file.filename)
+        if not os.path.exists(tmp_md_path):
+            os.makedirs(temp_md_dir,exist_ok=True)
+
 
         temp_file_path=""
         # 1. 处理临时文件
@@ -32,9 +43,10 @@ async def  upload_file(file: UploadFile=File(...)):
 
             # c. 获取临时文件的路径 # C:\Users\Administrator\AppData\Local\Temp\tmpe1puxhk7
             temp_file_path=temp_file.name
+        shutil.move(temp_file_path, tmp_md_path)
 
         # 2. 磁盘写入完成,入库操作  # TODO(去重)
-        chunks_added= await run_in_threadpool(ingestion_processor.ingest_file,temp_file_path)
+        chunks_added= await run_in_threadpool(ingestion_processor.ingest_file,tmp_md_path)
         print(f"临时文件路径:{temp_file_path}")
 
         # 3.构建文件上传的响应对象

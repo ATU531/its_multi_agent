@@ -7,21 +7,21 @@ class Settings(BaseSettings):
     MODEL: str = os.environ.get("MODEL")
     EMBEDDING_MODEL: str = os.environ.get("EMBEDDING_MODEL")
 
-    
+
     # knowledge/config
     KNOWLEDGE_BASE_URL:str=os.environ.get("KNOWLEDGE_BASE_URL")
 
     _current_dir = os.path.dirname(os.path.abspath(__file__))
     # knowledge
     _project_root = os.path.dirname(_current_dir)
-    
+
     VECTOR_STORE_PATH: str = os.path.join(_project_root, "chroma_kb")
-    
+
     # Default directories
     CRAWL_OUTPUT_DIR: str = os.path.join(_project_root, "data", "crawl")
     # Using 'data/crawl' as the default location for markdown files
     MD_FOLDER_PATH: str = CRAWL_OUTPUT_DIR
-    
+    TMP_MD_FOLDER_PATH:str = os.path.join(_project_root, "data", "tmp")
     # Text splitting configuration
     CHUNK_SIZE: int = 3000
     CHUNK_OVERLAP: int = 200
