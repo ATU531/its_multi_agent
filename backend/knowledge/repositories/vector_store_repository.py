@@ -1,10 +1,18 @@
-from langchain_chroma import Chroma
-from config.settings import settings
-from langchain_openai.embeddings import OpenAIEmbeddings
+# 1.优先import
 import  logging
-from langchain_huggingface import HuggingFaceEmbeddings  # 改用本地嵌入模型
 logging.basicConfig(level=logging.INFO)
 logger=logging.getLogger(__name__)
+
+# 2. from三方的
+from langchain_chroma import Chroma
+from sympy.printing.pretty.stringpict import stringPict
+from config.settings import settings
+from langchain_openai.embeddings import OpenAIEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings  # 改用本地嵌入模型
+from typing import List
+from langchain_core.documents import Document
+# 3. from 自己的
+
 
 class VectorStoreRepository:
     """
@@ -66,10 +74,42 @@ class VectorStoreRepository:
             logger.error(f"文档块列表:{documents}保存到向量数据库失败: {str(e)}")
             raise e
 
+    def embedd_document(self,text:str) -> List[float]:
+        """
+        对query进行向量化
+        Args:
+            text: 输入文本
+
+        Returns:
+            list[float]: 嵌入后的浮点数列表
+
+        """
+        return self.embedding.embed_query(text)
+
+    def embedd_documents(self,texts:List[str]) -> List[List[float]]:
+        """
+        对字符串列表进行向量化
+        Args:
+            text: 输入文本字符串列表
+
+        Returns:
+            list[float]: 嵌入后的多个文本的浮点数列表
+
+        """
+        return self.embedding.embed_documents(texts)
 
 
+    def search_similarity_with_score(self,user_question:str,top_k:int=5)->List[tuple[Document,float]]:
+        """
+        相似度检索带文档分数
+        分数（Chroma向量数据库），返回的是L2距离得分（分数越小越相似），不是余弦相似度得分（分数越高越相似）   距离得分：1-余弦相似度得分
+        Args:
+            user_question: 用户输入的问题
 
-
+        Returns:
+            List[tuple[Document,float]]: 返回基于向量检索的相似性文档列表
+        """
+        return self.vector_database.similarity_search_with_score(user_question,top_k)
 
 
 
