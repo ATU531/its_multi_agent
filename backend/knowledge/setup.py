@@ -20,6 +20,6 @@ setup(
         "unstructured",
         "markdown",
         "langchain_huggingface"
-        "python-multipart"
+        "python-multipart "
     ],
 )
