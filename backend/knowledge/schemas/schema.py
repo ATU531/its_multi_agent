@@ -11,3 +11,17 @@ class UploadResponse(BaseModel):
     chunks_added:int # 上传文档切分之后的文档块数量
 
 
+
+class QueryResponse(BaseModel):
+    """
+     查询的响应数据模型
+    """
+    question:str # 用户提问问题
+    answer:str # 模型的回答
+
+class QueryRequest(BaseModel):
+    """
+    查询的请求数据模型
+    """
+    question: str  # 用户提问问题
+

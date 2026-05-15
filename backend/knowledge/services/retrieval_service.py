@@ -314,8 +314,7 @@ class RetrievalService:
         # 5. 返回Top-N
         return [doc for doc, _ in sorted_docs[:2]]
 
-    def _deal_long_title_content(self, content: str, fine_md_metadata: Dict[str, Any], user_query: str) -> List[
-        Document]:
+    def _deal_long_title_content(self, content: str, fine_md_metadata: Dict[str, Any], user_query: str) -> List[Document]:
         """
          处理标题对应的长文本
          切分-->文档块--->算文档块和问题的相似度
