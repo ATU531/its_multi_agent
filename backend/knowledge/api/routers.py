@@ -83,6 +83,7 @@ async def query(request: QueryRequest):
         QueryResponse： 模型的结果以及原始问题
 
     """
+    logger.info(f"开始调用接口")
     try:
         # 1. 判断用户问题
         user_question = request.question
@@ -94,7 +95,7 @@ async def query(request: QueryRequest):
 
         # 3. 调用查询器的查询方法
         answer = query_service.generate_answer(user_question, retrieval_context)
-
+        logger.info(f"查询结果:{answer}")
         # 4. 封装到响应数据模型
         return QueryResponse(
             question=user_question,
